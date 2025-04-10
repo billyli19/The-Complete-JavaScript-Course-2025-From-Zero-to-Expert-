@@ -109,6 +109,12 @@ h1 {
   background-color: #ccc;
 }
 
+.btn:disabled {
+  background-color: #414141;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
 .message {
   margin-bottom: 8rem;
   height: 3rem;
