@@ -1,7 +1,5 @@
 'use strict';
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
 // BANKIST APP
 
 // Data
@@ -61,8 +59,6 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
 // LECTURES
 
 const currencies = new Map([
@@ -73,4 +69,39 @@ const currencies = new Map([
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-/////////////////////////////////////////////////
+const displayMovements = function (movements) {
+  // Clear existing movements
+  containerMovements.innerHTML = '';
+
+  // Loop through movements and create HTML for each movement
+  movements.forEach(function (mov, i) {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">
+          ${i + 1} ${type}
+        </div>
+        <div class="movements__value">${mov}</div>
+      </div>
+    `;
+
+    // Insert the HTML into the container
+    containerMovements.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+displayMovements(account1.movements);
+
+const createUserName = function (accounts) {
+  accounts.forEach(function (account) {
+    // Split the owner's name into an array of names
+    account.username = account.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
+};
+
+createUserName(accounts);
