@@ -18,33 +18,30 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
-// 1. Julia found out that the owners of the FIRST and the LAST TWO dogs actually have cats, not dogs! So create a shallow copy of Julia's array, and remove the cat ages from that copied array (because it's a bad practice to mutate function parameters)
-
-const dogsContainer = document.querySelector(".dogs");
-
 const testDataJulia1 = [3, 5, 2, 12, 7];
 const testDataKate1 = [4, 1, 15, 8, 3];
 
 const testDataJulia2 = [9, 16, 6, 8, 3];
 const testDataKate2 = [10, 5, 6, 1, 4];
 
-const checkDogs = function (data1, data2) {
+const checkDogs = (data1, data2) => {
+  // 1. Julia found out that the owners of the FIRST and the LAST TWO dogs actually have cats, not dogs! So create a shallow copy of Julia's array, and remove the cat ages from that copied array (because it's a bad practice to mutate function parameters)
   const testDataJuliaCorrected = data1.slice(1, -2);
 
+  // 2. Create an array with both Julia's (corrected) and Kate's data
   const dogsAge = [...testDataJuliaCorrected, ...data2];
+  console.log(`Dogs age: ${dogsAge}`);
 
-  dogsAge.forEach(function (dogAge, index) {
-    const html = `
-    <li>
-      Dog number ${index + 1} is ${
-      dogAge >= 3 ? "an adult" : "still a puppy 🐶"
-    }, and is ${dogAge} years old
-    </li>
-    `;
-
-    dogsContainer.insertAdjacentHTML("beforeend", html);
+  // 3. For each remaining dog, log to the console whether it's an adult ("Dog number 1 is an adult, and is 5 years old") or a puppy ("Dog number 2 is still a puppy 🐶"
+  dogsAge.forEach((dogsAge, index) => {
+    console.log(
+      `Dog number ${index + 1} is ${
+        dogsAge >= 3 ? "an adult" : "still a puppy 🐶"
+      }, and is ${dogsAge} years old`
+    );
   });
 };
 
+// 4. Run the function for both test datasets
 checkDogs(testDataJulia1, testDataKate1);
 checkDogs(testDataJulia2, testDataKate2);

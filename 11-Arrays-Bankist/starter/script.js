@@ -6,7 +6,7 @@
 const account1 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
-  interestRate: 1.2, // %
+  interestRate: 1.2,
   pin: 1111,
 };
 
@@ -67,34 +67,10 @@ const currencies = new Map([
   ['GBP', 'Pound sterling'],
 ]);
 
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+let currentAccount;
 
-const displayMovements = function (movements) {
-  // Clear existing movements
-  containerMovements.innerHTML = '';
-
-  // Loop through movements and create HTML for each movement
-  movements.forEach(function (mov, i) {
-    const type = mov > 0 ? 'deposit' : 'withdrawal';
-
-    const html = `
-      <div class="movements__row">
-        <div class="movements__type movements__type--${type}">
-          ${i + 1} ${type}
-        </div>
-        <div class="movements__value">${mov}</div>
-      </div>
-    `;
-
-    // Insert the HTML into the container
-    containerMovements.insertAdjacentHTML('beforeend', html);
-  });
-};
-
-displayMovements(account1.movements);
-
-const createUserName = function (accounts) {
-  accounts.forEach(function (account) {
+const createUserName = accounts => {
+  accounts.forEach(account => {
     // Split the owner's name into an array of names
     account.username = account.owner
       .toLowerCase()
@@ -104,4 +80,90 @@ const createUserName = function (accounts) {
   });
 };
 
+const displayMovements = movements => {
+  // Clear existing movements
+  containerMovements.innerHTML = '';
+
+  // Loop through movements and create HTML for each movement
+  movements.forEach((mov, i) => {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">
+          ${i + 1} ${type}
+        </div>
+        <div class="movements__value">€${mov}</div>
+      </div>  
+    `;
+
+    // Insert the HTML into the container
+    containerMovements.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+const displayBalance = movements => {
+  // Calculate the total balance
+  const calcBalance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `€${calcBalance}`;
+};
+
+const displaySummary = account => {
+  // Calculate total deposits
+  const incomes = account.movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  // Calculate total withdrawals
+  const out = account.movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  // Calculate total interest above 1
+  const interest = account.movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * account.interestRate) / 100)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+
+  // Display the results
+  labelSumIn.textContent = `€${incomes}`;
+  labelSumOut.textContent = `€${Math.abs(out)}`;
+  labelSumInterest.textContent = `€${interest}`;
+};
+
 createUserName(accounts);
+
+// Event handler for login button
+btnLogin.addEventListener('click', e => {
+  // Prevent form from submitting
+  e.preventDefault();
+
+  // Get the username from the input field
+  currentAccount = accounts.find(
+    acc => acc.username === inputLoginUsername.value
+  );
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    // Clear input fields
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+
+    // Display movements
+    displayMovements(currentAccount.movements);
+
+    // Display balance
+    displayBalance(currentAccount.movements);
+
+    // Display summary
+    displaySummary(currentAccount);
+  }
+});
