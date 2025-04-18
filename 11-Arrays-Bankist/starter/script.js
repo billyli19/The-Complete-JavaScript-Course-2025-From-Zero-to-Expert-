@@ -2,6 +2,8 @@
 
 // BANKIST APP
 
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
@@ -80,12 +82,15 @@ const createUserName = accounts => {
   });
 };
 
-const displayMovements = movements => {
+const displayMovements = (movements, sort = false) => {
   // Clear existing movements
   containerMovements.innerHTML = '';
 
+  // Sort movements ASCENDING if sort is true
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
   // Loop through movements and create HTML for each movement
-  movements.forEach((mov, i) => {
+  movs.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -102,10 +107,10 @@ const displayMovements = movements => {
   });
 };
 
-const displayBalance = movements => {
+const displayBalance = account => {
   // Calculate the total balance
-  const calcBalance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `€${calcBalance}`;
+  account.balance = account.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `€${account.balance}`;
 };
 
 const displaySummary = account => {
@@ -136,6 +141,17 @@ const displaySummary = account => {
 
 createUserName(accounts);
 
+const updateUI = currentAccount => {
+  // Display movements
+  displayMovements(currentAccount.movements);
+
+  // Display balance
+  displayBalance(currentAccount);
+
+  // Display summary
+  displaySummary(currentAccount);
+};
+
 // Event handler for login button
 btnLogin.addEventListener('click', e => {
   // Prevent form from submitting
@@ -154,16 +170,100 @@ btnLogin.addEventListener('click', e => {
     containerApp.style.opacity = 100;
 
     // Clear input fields
+    sorted = false;
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
-    // Display movements
-    displayMovements(currentAccount.movements);
-
-    // Display balance
-    displayBalance(currentAccount.movements);
-
-    // Display summary
-    displaySummary(currentAccount);
+    // Update UI
+    updateUI(currentAccount);
   }
 });
+
+btnTransfer.addEventListener('click', e => {
+  e.preventDefault();
+
+  // Get the transfer amount
+  const amount = Number(inputTransferAmount.value);
+
+  // Get the recipient account
+  const receiverAccount = accounts.find(
+    account => account.username === inputTransferTo.value
+  );
+
+  // Check input
+  if (
+    amount > 0 &&
+    receiverAccount &&
+    currentAccount.balance >= amount &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    // Perform the transfer
+    currentAccount.movements.push(-amount);
+    receiverAccount.movements.push(amount);
+
+    // Clear input fields
+    inputTransferAmount.value = inputTransferTo.value = '';
+    inputTransferAmount.blur();
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+});
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+
+  // Check if the username and pin match
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    // Find the index of the current account
+    const index = accounts.findIndex(
+      account => account.username === currentAccount.username
+    );
+
+    // Delete the account from the accounts array
+    accounts.splice(index, 1);
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+  }
+
+  // Clear input fields
+  inputCloseUsername.value = inputClosePin.value = '';
+  labelWelcome.textContent = 'Log in to get started';
+});
+
+btnLoan.addEventListener('click', e => {
+  e.preventDefault();
+
+  // Get the loan amount
+  const amount = Number(inputLoanAmount.value);
+
+  // Check if the amount is valid
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add the loan amount to the current account
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+
+  // Clear input field
+  inputLoanAmount.value = '';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
+
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
+const randomDiceRolls = Array.from(
+  { length: 100 },
+  () => Math.floor(Math.random() * 6) + 1
+);
+console.log(randomDiceRolls);
