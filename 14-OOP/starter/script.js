@@ -20,5 +20,4 @@ Person.prototype.calcAge = function () {
   console.log(currentYear - this.birthYear);
 };
 
-billy.calcAge();
-
+billy.calcAge(); 
