@@ -181,65 +181,7 @@ BONUS TEST DATA 2: [1, 5, 3, 9, 6, 1]
 GOOD LUCK 😀
 */
 
-// const poll = {
-//   question: 'What is your favourite programming language?',
-//   options: ['0: JavaScript', '1: Python', '2: Rust', '3: C++'],
-//   // This generates [0, 0, 0, 0]. More in the next section!
-//   answers: new Array(4).fill(0),
 
-//   registerNewAnswer() {
-//     const answer = Number(
-//       prompt(
-//         `${this.question}\n${this.options.join('\n')}\n(Write option number)`
-//       )
-//     );
-
-//     if (isNaN(answer) || answer < 0 || answer >= this.answers.length) {
-//       console.log('Invalid input! Please enter a valid option number.');
-//     } else {
-//       this.answers[answer]++;
-//       console.log(this.answers);
-//     }
-
-//     displayResults(this.answers);
-//     displayResults.call({ answers: this.answers }, 'string');
-//   },
-// };
-
-// function displayResults(type = 'array') {
-//   if (type === 'array') {
-//     console.log(this.answers);
-//   } else if (type === 'string') {
-//     console.log(`Poll results are ${this.answers.join(', ')}`);
-//   }
-// }
-
-// document
-//   .querySelector('.poll')
-//   .addEventListener('click', poll.registerNewAnswer.bind(poll));
-
-// const runOnce = function () {
-//   console.log('A: This will never run again!');
-// };
-
-// runOnce();
-
-// (function () {
-//   console.log('B: This will run once');
-// })();
-
-// (() => console.log('C: This will also run once'))();
-
-// const secureBooking = function () {
-//   let passengerCount = 0;
-
-//   return function () {
-//     passengerCount++;
-//     console.log(`${passengerCount} passengers`);
-//   };
-// };
-
-// const booker = secureBooking();
 
 // Coding Challenge #2
 
