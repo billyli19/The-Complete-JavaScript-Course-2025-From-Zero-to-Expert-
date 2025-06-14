@@ -1,0 +1,22 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "Recipe application",
+  "source": "index.html",
+  "scripts": {
+    "start": "parcel",
+    "build": "parcel build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Billy Li",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.15.2",
+    "parcel": "^2.15.2",
+    "sass": "^1.89.2"
+  },
+  "dependencies": {
+    "core-js": "^3.43.0",
+    "regenerator-runtime": "^0.14.1"
+  }
+}
