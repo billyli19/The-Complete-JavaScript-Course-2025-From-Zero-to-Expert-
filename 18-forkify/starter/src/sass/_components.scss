@@ -152,6 +152,15 @@
   &:not(:last-child) {
     margin-right: 0.3rem;
   }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    svg {
+      fill: vars.$color-grey-dark-2;
+      transform: none;
+    }
+  }
 }
 
 .heading--2 {
